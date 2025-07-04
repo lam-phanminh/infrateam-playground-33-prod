@@ -86,7 +86,7 @@ jobs:
   terraform-graph:
     name: "Terraform-Graph"
     needs: terraform
-    if: needs.terraform.outputs.plan_status == 'success'
+    if: needs.terraform.outputs.apply_status == 'success'
     runs-on: ubuntu-latest
     defaults:
       run:
