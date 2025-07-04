@@ -134,7 +134,10 @@ jobs:
 
           mkdir -p ../terraform-graph
           cp graph.png ../terraform-graph/graph.png
-
+          
+          rm -rf .terraform
+          rm -f graph.dot graph.png .terraform.lock.hcl
+          
           cd ..
           git add terraform-graph/graph.png
           git commit -m "Update terraform graph image"
@@ -152,6 +155,7 @@ jobs:
           title: "Update terraform graph image"
           body: "This PR adds or updates terraform-graph/graph.png"
           base: main
+          add-paths: terraform-graph/graph.png
 
       - name: Enable Auto-Merge
         uses: peter-evans/enable-pull-request-automerge@v2
