@@ -11,6 +11,7 @@ on:
     paths:
      - 'terraform/*'
      - '.github/workflows/terraform.yaml'
+
 jobs:
   terraform:
     name: "Terraform"
@@ -46,33 +47,6 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         continue-on-error: true       
 
-      # - uses: actions/github-script@0.9.0
-      #   if: github.event_name == 'pull_request'
-      #   env:
-      #     PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     script: |
-      #       const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-      #       #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-      #       #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-
-      #       <details><summary>Show Plan</summary>
-
-      #       \`\`\`${process.env.PLAN}\`\`\`
-
-      #       </details>
-
-      #       *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
-              
-      #       github.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: output
-      #       })
-
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1      
@@ -90,9 +64,6 @@ jobs:
     needs: terraform
     if: needs.terraform.outputs.plan_status == 'success'
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: terraform
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -119,12 +90,6 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           
-      # - name: Upload Graph Image
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: terraform-graph
-      #     path: terraform/graph.png
-
       - name: Commit graph.png to a branch
         run: |
           git config --global user.name github-actions
@@ -137,13 +102,8 @@ jobs:
           mkdir -p terraform-graph
           cp terraform/graph.png terraform-graph/graph.png
           
-          # rm -rf terraform/.terraform terraform/graph.dot terraform/graph.png terraform/.terraform.lock.hcl    
-
-          pwd 
-          ls -lah
-          git add .
+          git add terraform-graph/graph.png
           git commit -m "Update terraform graph image"
-          git status
           git push --force-with-lease origin $BRANCH_NAME
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -166,4 +126,3 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
           merge-method: squash
-
