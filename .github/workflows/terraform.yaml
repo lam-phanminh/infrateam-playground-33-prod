@@ -120,3 +120,41 @@ jobs:
         with:
           name: terraform-graph
           path: terraform/graph.png
+
+      - name: Commit graph.png to a branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          BRANCH_NAME="graph-update-${{ github.run_number }}"
+          git fetch origin
+          git checkout -b $BRANCH_NAME origin/main
+
+          mkdir -p ../terraform-graph
+          cp graph.png ../terraform-graph/graph.png
+
+          cd ..
+          git add terraform-graph/graph.png
+          git commit -m "Update terraform graph image"
+          git push origin $BRANCH_NAME
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: graph-update-${{ github.run_number }}
+          commit-message: "Update terraform graph image"
+          title: "Update terraform graph image"
+          body: "This PR adds or updates terraform-graph/graph.png"
+          base: main
+
+      - name: Enable Auto-Merge
+        uses: peter-evans/enable-pull-request-automerge@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: squash
+
