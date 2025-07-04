@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest    
     outputs:
       apply_status: ${{ steps.apply.outcome }}
+      plan_status: ${{ steps.plan.outcome }}
     defaults:
       run:
         working-directory: terraform
@@ -85,7 +86,7 @@ jobs:
   terraform-graph:
     name: "Terraform-Graph"
     needs: terraform
-    if: needs.terraform.outputs.apply_status == 'success'
+    if: needs.terraform.outputs.plan_status == 'success'
     runs-on: ubuntu-latest
     defaults:
       run:
