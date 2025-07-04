@@ -110,6 +110,7 @@ jobs:
       - name: Terraform Graph
         run: |
           terraform graph > graph.dot
+          cat graph.dot
           dot -Tpng graph.dot -o graph.png
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
