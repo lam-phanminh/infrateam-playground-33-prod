@@ -94,39 +94,32 @@ jobs:
         run: |
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
-      
+
           BRANCH_NAME="graph-update-${{ github.run_number }}"
           git fetch origin
-          git checkout -b $BRANCH_NAME origin/main
-      
+          if git ls-remote --heads origin $BRANCH_NAME; then
+            git checkout $BRANCH_NAME
+          else
+            git checkout -b $BRANCH_NAME origin/main
+          fi
+
           mkdir -p terraform-graph
           cp terraform/graph.png terraform-graph/graph.png
           
           # Clean up temporary files
           rm -rf terraform/.terraform terraform/graph.dot terraform/.terraform.lock.hcl terraform/graph.png
-      
-          # Add and commit only the changed file
+
+          # Add and commit only if there are changes
           git add terraform-graph/graph.png
-          if git diff --staged --quiet; then
+          if ! git diff --staged --quiet; then
+            git commit -m "Update terraform graph image"
+            git push origin $BRANCH_NAME
+          else
             echo "No changes in terraform-graph/graph.png, skipping commit and PR"
             exit 0
           fi
-      
-          git commit -m "Update terraform graph image"
-          
-          # Check if branch already exists and push with proper strategy
-          if git ls-remote --heads origin $BRANCH_NAME; then
-            git push origin $BRANCH_NAME
-          else
-            git push origin $BRANCH_NAME --set-upstream
-          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      - name: Debug Repository State
-        run: |
-          git status
-          ls -lah terraform-graph/
 
       - name: Create Pull Request
         id: cpr
@@ -139,8 +132,10 @@ jobs:
           body: "This PR adds or updates terraform-graph/graph.png"
           base: main
           add-paths: terraform-graph/graph.png
+          delete-branch: true
 
       - name: Enable Auto-Merge
+        if: steps.cpr.outputs.pull-request-number != ''
         uses: peter-evans/enable-pull-request-automerge@v2
         with:
           token: ${{ secrets.GH_TOKEN }}
