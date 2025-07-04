@@ -1,0 +1,5 @@
+digraph G {
+  rankdir = "RL";
+  node [shape = rect, fontname = "sans-serif"];
+  "google_storage_bucket.infra_test" [label="google_storage_bucket.infra_test"];
+}
