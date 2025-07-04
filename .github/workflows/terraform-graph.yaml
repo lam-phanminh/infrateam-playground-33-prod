@@ -71,6 +71,7 @@ jobs:
           terraform graph > ../terraform-graph/graph.dot
           cat ../terraform-graph/graph.dot
           dot -Tpng ../terraform-graph/graph.dot -o ../terraform-graph/graph.png
+          cat ../terraform-graph/graph.png
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
         
