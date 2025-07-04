@@ -88,7 +88,7 @@ jobs:
   terraform-graph:
     name: "Terraform-Graph"
     needs: terraform
-    if: needs.terraform.outputs.apply_status == 'success'
+    if: needs.terraform.outputs.plan_status == 'success'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -132,12 +132,14 @@ jobs:
           git fetch origin
           git checkout -b $BRANCH_NAME origin/main
 
+          pwd
           mkdir -p ../terraform-graph
           cp graph.png ../terraform-graph/graph.png
-
-          rm -rf .terraform
+          ls -lah ../terraform-graph
+          rm -rf .terraform.*
           
           cd ..
+          pwd
           git add terraform-graph/graph.png
           git commit -m "Update terraform graph image"
           git push --force-with-lease origin $BRANCH_NAME
