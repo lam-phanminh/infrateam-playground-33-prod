@@ -133,6 +133,8 @@ jobs:
           mkdir -p ../terraform-graph
           cp graph.png ../terraform-graph/graph.png
 
+          rm -rf .terraform
+          
           cd ..
           git add terraform-graph/graph.png
           git commit -m "Update terraform graph image"
