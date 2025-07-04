@@ -4,11 +4,3 @@
 .terraform/
 .terraform.lock.hcl
 
-# Ignore dot files
-graph.dot
-
-# Optional: ignore plan output
-*.tfplan
-
-# Ignore crash logs
-crash.log
