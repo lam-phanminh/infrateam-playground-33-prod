@@ -139,7 +139,7 @@ jobs:
           cd ..
           pwd 
           ls terraform-graph
-          git add terraform-graph/graph.png
+          git add .
           git commit -m "Update terraform graph image"
           git push --force-with-lease origin $BRANCH_NAME
         env:
