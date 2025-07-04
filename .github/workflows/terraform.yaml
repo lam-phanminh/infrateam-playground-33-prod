@@ -135,10 +135,10 @@ jobs:
           mkdir -p ../terraform-graph
           cp graph.png ../terraform-graph/graph.png
           
-          rm -rf .terraform
-          rm -f graph.dot graph.png .terraform.lock.hcl
-          
+          rm -rf .terraform graph.dot graph.png .terraform.lock.hcl    
           cd ..
+          pwd 
+          ls terraform-graph
           git add terraform-graph/graph.png
           git commit -m "Update terraform graph image"
           git push --force-with-lease origin $BRANCH_NAME
