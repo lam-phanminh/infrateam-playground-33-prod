@@ -132,15 +132,10 @@ jobs:
           git fetch origin
           git checkout -b $BRANCH_NAME origin/main
 
-          pwd
           mkdir -p ../terraform-graph
           cp graph.png ../terraform-graph/graph.png
-          ls -lah ../terraform-graph
-          # rm -rf .terraform. 
-          
+
           cd ..
-          pwd
-          ls -lah
           git add terraform-graph/graph.png
           git commit -m "Update terraform graph image"
           git push --force-with-lease origin $BRANCH_NAME
