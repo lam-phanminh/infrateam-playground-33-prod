@@ -137,7 +137,7 @@ jobs:
           mkdir -p terraform-graph
           cp terraform/graph.png terraform-graph/graph.png
           
-          rm -rf terraform/.terraform terraform/graph.dot terraform/graph.png terraform/.terraform.lock.hcl    
+          # rm -rf terraform/.terraform terraform/graph.dot terraform/graph.png terraform/.terraform.lock.hcl    
 
           pwd 
           ls -lah
