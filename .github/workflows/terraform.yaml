@@ -123,8 +123,8 @@ jobs:
 
       - name: Commit graph.png to a branch
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
 
           BRANCH_NAME="graph-update-${{ github.run_number }}"
           git fetch origin
