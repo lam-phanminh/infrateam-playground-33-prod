@@ -86,6 +86,7 @@ jobs:
       - name: Terraform Graph
         if: steps.plan.outcome == 'success'
         run: |
-          terraform graph | dot -Tpng > graph.png
+          terraform graph > graph.dot
+          dot -Tpng graph.dot -o graph.png
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
