@@ -90,9 +90,9 @@ jobs:
     needs: terraform
     if: needs.terraform.outputs.plan_status == 'success'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: terraform
+    # defaults:
+    #   run:
+    #     working-directory: terraform
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -104,6 +104,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y graphviz
 
       - name: Terraform Init
+        working-directory: terraform
         id: init
         run: terraform init
         env:
@@ -132,15 +133,16 @@ jobs:
           git fetch origin
           git checkout -b $BRANCH_NAME origin/main
 
-          mkdir -p ../terraform-graph
-          cp graph.png ../terraform-graph/graph.png
+          mkdir -p terraform-graph
+          cp terraform/graph.png terraform-graph/graph.png
           
-          rm -rf .terraform graph.dot graph.png .terraform.lock.hcl    
-          cd ..
+          rm -rf terraform/.terraform terraform/graph.dot terraform/graph.png terraform/.terraform.lock.hcl    
+
           pwd 
-          ls terraform-graph
+          ls -lah
           git add .
           git commit -m "Update terraform graph image"
+          git status
           git push --force-with-lease origin $BRANCH_NAME
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
