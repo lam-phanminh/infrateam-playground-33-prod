@@ -81,7 +81,7 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - name: Terraform Graph
-        if: step.plan.outcom == 'success'
+        if: step.plan.outcome == 'success'
         run: |
           terraform graph
         env:
