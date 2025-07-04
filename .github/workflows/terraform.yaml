@@ -111,8 +111,9 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           
       - name: Terraform Graph
+        working-directory: terraform
         run: |
-          terraform graph ./terraform > graph.dot
+          terraform graph > graph.dot
           cat graph.dot
           dot -Tpng graph.dot -o graph.png
         env:
