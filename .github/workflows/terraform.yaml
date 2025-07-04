@@ -88,7 +88,7 @@ jobs:
   terraform-graph:
     name: "Terraform-Graph"
     needs: terraform
-    if: needs.terraform.outputs.plan_status == 'success'
+    if: needs.terraform.outputs.apply_status == 'success'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -117,11 +117,11 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           
-      - name: Upload Graph Image
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-graph
-          path: terraform/graph.png
+      # - name: Upload Graph Image
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: terraform-graph
+      #     path: terraform/graph.png
 
       - name: Commit graph.png to a branch
         run: |
