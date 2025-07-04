@@ -138,7 +138,7 @@ jobs:
           cd ..
           git add terraform-graph/graph.png
           git commit -m "Update terraform graph image"
-          git push origin $BRANCH_NAME
+          git push --force-with-lease origin $BRANCH_NAME
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 
