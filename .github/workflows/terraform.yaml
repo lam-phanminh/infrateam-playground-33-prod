@@ -80,6 +80,9 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
+      - name: Install Graphviz
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+  
       - name: Terraform Graph
         if: steps.plan.outcome == 'success'
         run: |
