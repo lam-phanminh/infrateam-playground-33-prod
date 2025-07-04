@@ -100,7 +100,13 @@ jobs:
         
       - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz
-        
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          
       - name: Terraform Graph
         run: |
           terraform graph > graph.dot
