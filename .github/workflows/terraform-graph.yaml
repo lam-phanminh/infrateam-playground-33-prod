@@ -34,12 +34,12 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-      # - uses: mdecoleman/pr-branch-name@1.2.0
-      #   id: branchname
-      #   with:
-      #     repo-token: ${{ secrets.GH_TOKEN }}
+      - uses: mdecoleman/pr-branch-name@1.2.0
+        id: branchname
+        with:
+          repo-token: ${{ secrets.GH_TOKEN }}
           
-      # - run: echo ${{ steps.branchname.outputs.branch }}
+      - run: echo ${{ steps.branchname.outputs.branch }}
       
       # - name: Read deployment.json
       #   id: package
@@ -82,7 +82,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -a -m "update terraform graph" --allow-empty     
-          git checkout -b ${{ steps.branchname.outputs.branch }}          
-          git push -u origin ${{ steps.branchname.outputs.branch }}
+          git checkout ${{ steps.branchname.outputs.branch }}          
+          git push -u origin ${{ steps.branchname.outputs.branch }}  
 
    
