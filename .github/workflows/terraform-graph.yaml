@@ -34,25 +34,25 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-      - uses: mdecoleman/pr-branch-name@1.2.0
-        id: branchname
-        with:
-          repo-token: ${{ secrets.GH_TOKEN }}
+      # - uses: mdecoleman/pr-branch-name@1.2.0
+      #   id: branchname
+      #   with:
+      #     repo-token: ${{ secrets.GH_TOKEN }}
           
-      - run: echo ${{ steps.branchname.outputs.branch }}
+      # - run: echo ${{ steps.branchname.outputs.branch }}
       
-      - name: Read deployment.json
-        id: package
-        uses: juliangruber/read-file-action@v1
-        with:
-          path: terraform-graph/graph.png
+      # - name: Read deployment.json
+      #   id: package
+      #   uses: juliangruber/read-file-action@v1
+      #   with:
+      #     path: terraform-graph/graph.png
           
-      - uses: jungwinter/split@v2
-        id: split
-        with:
-          msg: '${{ steps.package.outputs.content }}'
+      # - uses: jungwinter/split@v2
+      #   id: split
+      #   with:
+      #     msg: '${{ steps.package.outputs.content }}'
       
-      - run: echo '${{ steps.split.outputs._1 }}'     
+      # - run: echo '${{ steps.split.outputs._1 }}'     
       
       # - name: Create GitHub deployment
       #   if: ${{ steps.split.outputs._2 != steps.branchname.outputs.branch }}
@@ -64,8 +64,8 @@ jobs:
       #     state: 'queued'      
       
       - name: create terraform graph
-        if: ${{ steps.split.outputs._2 != steps.branchname.outputs.branch }}      
-        id: deploymentstring
+        # if: ${{ steps.split.outputs._2 != steps.branchname.outputs.branch }}      
+        # id: deploymentstring
         run: |
           mkdir -p ../terraform-graph
           terraform graph > ../terraform-graph/graph.dot
