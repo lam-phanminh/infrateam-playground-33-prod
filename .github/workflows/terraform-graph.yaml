@@ -78,7 +78,7 @@ jobs:
       - name: update file
         if: ${{ steps.split.outputs._2 != steps.branchname.outputs.branch }}  
         run: |    
-          cp ../terraform-graph/graph.png ../terraform-graph/graph.png        
+          # cp ../terraform-graph/graph.png ../terraform-graph/graph.png        
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -a -m "update terraform graph" --allow-empty     
