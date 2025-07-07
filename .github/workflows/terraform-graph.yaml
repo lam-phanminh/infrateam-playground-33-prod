@@ -1,0 +1,88 @@
+name: Terraform-graph
+
+on:
+  pull_request:
+    branches: 
+      - main
+
+env:
+  PROJECT: gridsz-ac # {"$kpt-set":"project"}
+  REPO_NAME: googlecloud-gridsz-ac-uat # {"$kpt-set":"app"}
+
+jobs:
+  terraform-graph:
+    name: terraform-graph
+    runs-on: ubuntu-latest    
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v2
+        with: 
+          fetch-depth: '0'
+          token: ${{ secrets.GH_TOKEN }}
+          
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        
+      - name: Install Graphviz
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+      - uses: mdecoleman/pr-branch-name@1.2.0
+        id: branchname
+        with:
+          repo-token: ${{ secrets.GH_TOKEN }}
+          
+      - run: echo ${{ steps.branchname.outputs.branch }}
+      
+      - name: Read deployment.json
+        id: package
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: terraform-graph/graph.png
+          
+      - uses: jungwinter/split@v2
+        id: split
+        with:
+          msg: '${{ steps.package.outputs.content }}'
+      
+      - run: echo '${{ steps.split.outputs._1 }}'     
+      
+      # - name: Create GitHub deployment
+      #   if: ${{ steps.split.outputs._2 != steps.branchname.outputs.branch }}
+      #   uses: chrnorm/deployment-action@v2
+      #   id: deployment
+      #   with:
+      #     token: '${{ secrets.GH_TOKEN }}'
+      #     environment: gridsz-ac-uat
+      #     state: 'queued'      
+      
+      - name: create terraform graph
+        if: ${{ steps.split.outputs._2 != steps.branchname.outputs.branch }}      
+        id: deploymentstring
+        run: |
+          mkdir -p ../terraform-graph
+          terraform graph > ../terraform-graph/graph.dot
+          cat ../terraform-graph/graph.dot
+          dot -Tpng ../terraform-graph/graph.dot -o ../terraform-graph/graph.png
+          cat ../terraform-graph/graph.png
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        
+      - name: update file
+        if: ${{ steps.split.outputs._2 != steps.branchname.outputs.branch }}  
+        run: |    
+          # cp ../terraform-graph/graph.png ../terraform-graph/graph.png        
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -a -m "update terraform graph" --allow-empty     
+          git checkout -b ${{ steps.branchname.outputs.branch }}          
+          git push -u origin ${{ steps.branchname.outputs.branch }}
+
+   
